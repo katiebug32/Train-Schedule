@@ -31,48 +31,21 @@ setInterval(updateDBTimes, 30000);
 
 function updateDBTimes() {
     $("#tbody").empty();
-    renderTrainTable(currentSnapshot);
-    // currentSnapshot.forEach(function (childSnapshot) {
-    //     var childData = childSnapshot.val();
-    //     // childData.firstArrivalConverted = moment(firstArrivalTime, "HH:mm").subtract(1, "years");
-    //     // console.log("FIRST TIME CONVERTED: ", firstArrivalConverted);
-    //     childData.currTime = moment().format("LLLL");
-    //     // console.log("CURRENT TIME: ", childData.currTime);
-    //     childData.diffInTime = moment().diff(moment(childData.firstArrivalConverted, "minutes"));
-    //     // console.log("DIFF IN TIME: ", diffInTime);
-    //     childData.timeRemainder = childData.diffInTime % childData.trainFrequency;
-    //     // console.log("remainder: ", timeRemainder);
-    //     childData.minutesAway = childData.trainFrequency - childData.timeRemainder;
-    //     // console.log("mins till train arrive: ", minutesAway);
-    //     childData.nextArrival = moment().add(childData.minutesAway, "minutes");
-    //     childData.nextArrival = moment(childData.nextArrival).format("hh:mm");
-    //     // console.log("Next arrival: ", nextArrival);
-    
-    //     // database.ref().set({
-    //     //     trainName: childData.trainName,
-    //     //     destination: childData.destination,
-    //     //     firstArrivalTime: childData.firstArrivalTime,
-    //     //     trainFrequency: childData.trainFrequency,
-    //     //     currTime: childData.currTime,
-    //     //     diffInTime: childData.diffInTime,
-    //     //     timeRemainder: childData.timeRemainder,
-    //     //     minutesAway: childData.minutesAway,
-    //     //     nextArrival: childData.nextArrival
-    //     // });
-    //     $("#tbody").append("<tr><td>" + childData.trainName + "</td><td>" + childData.destination + "</td><td>" + childData.trainFrequency + "</td><td>" + childData.nextArrival + "</td><td>" + childData.minutesAway + "</td>");
-    // });
+    renderTrainTable(currentSnapshot); //recalc and display as time changes
 }
 
+
+// grabs current values from firebase and loops through to get & calculate data
 function renderTrainTable(snapshot) {
     $("#tbody").empty();
     snapshot.forEach(function (childSnapshot) {
-        var childData = childSnapshot.val();
-        var trainData = getTrainData(childData.firstArrivalTime, childData.trainFrequency);
+        var childData = childSnapshot.val(); // values currently in firebase
+        var trainData = getTrainData(childData.firstArrivalTime, childData.trainFrequency); //grabs and calcs data and returns updated values to refresh in DOM
         $("#tbody").append("<tr><td>" + childData.trainName +  "</td><td>" + 
         childData.destination + "</td><td>" + 
         childData.trainFrequency + "</td><td>" + 
-        trainData.nextArrival + "</td><td>" + 
-        trainData.minutesAway + "</td>");
+        trainData.nextArrival + "</td><td>" + //calculated value
+        trainData.minutesAway + "</td>"); //calculated value
     });
 }
 
@@ -90,17 +63,17 @@ function getTrainData(firstArrivalTime, trainFrequency) {
     var nextArrival = moment().add(minutesAway, "minutes");
     nextArrival = moment(nextArrival).format("HH:mm");
     console.log("Next arrival: ", nextArrival);
-    return {
+    return { //calculated values returned to use in next step
         nextArrival: nextArrival,
         minutesAway: minutesAway
     }
 };
 
-
+//when any new data is input or changed, update and grab/store most current snapshot of values
 database.ref().on("value", function (snapshot) {
     console.log(snapshot.val().destination);
-    renderTrainTable(snapshot);
-    currentSnapshot = snapshot;
+    renderTrainTable(snapshot); 
+    currentSnapshot = snapshot; // save the snapshot info for interval use
 }, function (error) {
     console.log("error", error);
 });
@@ -111,10 +84,10 @@ $("#submitButton").on("click", function (event) {
     trainName = $("#train").val().trim();
     destination = $("#dest").val().trim();
     firstArrivalTime = $("#firstArriv").val().trim();
-    console.log("firstarrivaltime: ", firstArrivalTime);
+    console.log("firstarrivaltime: ", firstArrivalTime); //needed this to verify time calcs
     trainFrequency = $("#freq").val().trim();
 
-
+//making sure no input fields were left empty
     if (trainName == '' || destination == '' || firstArrivalTime == NaN || firstArrivalTime == "" || trainFrequency == '') {
         alert("Please fill out all input fields.");
     }
@@ -124,16 +97,15 @@ $("#submitButton").on("click", function (event) {
             destination: destination,
             firstArrivalTime: firstArrivalTime,
             trainFrequency: trainFrequency,
+
+            //didn't need these:
             // currTime: currTime,
             // diffInTime: diffInTime,
             // timeRemainder: timeRemainder,
             // minutesAway: minutesAway,
             // nextArrival: nextArrival
         });
-        // getTrainData();
-    // <td>" + startDate + "</td><td>" + monthPay + "</td>");
-    //   $("<tr>").appendTo("#tbody").attr("id", "empData");
-    //   $("<td>").text(name).appendTo("#empData");
+    
     $("input").val("");
     }
 });
