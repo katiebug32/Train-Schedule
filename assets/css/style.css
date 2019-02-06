@@ -1,0 +1,74 @@
+html { 
+    background: url(../images/vinilowraw-1219594-unsplash.jpg) no-repeat center center fixed; 
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+    
+}
+
+body {
+    margin: 4% 20%;
+    font-family: 'Roboto Mono', monospace;
+}
+
+.jumbotron-fluid {
+    height: 9rem;
+    text-align: center;
+    padding-top: 2rem;
+    font-size: 2rem;
+}
+
+/* .display-4 {
+   
+} */
+
+.card-header {
+    background-color: lightslategray;
+    font-weight: bold;
+}
+
+label {
+    font-weight: bold;
+}
+
+
+
+
+#photoCred {
+font-size: .5rem;
+}
+
+@media screen and (max-width: 930px){
+    body {
+        margin: 4% 10%;
+    }
+    h1 {
+        font-size: 2rem;
+    }
+}
+
+@media screen and (max-width: 659px){
+    body {
+        margin: 4% 10%;
+    }
+   
+    h1 {
+        font-size: 1.5rem;
+    }
+
+}
+@media screen and (max-width: 383px){
+    body {
+        margin: 4% 10%;
+    }
+   
+    h1 {
+        font-size: 1.2rem;
+    }
+
+    h2 {
+        font-size: 1.2rem;
+    }
+
+}
